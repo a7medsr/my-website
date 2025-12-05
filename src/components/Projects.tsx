@@ -1,41 +1,56 @@
 import { useState, useRef, useEffect } from "react";
-import { ExternalLink, Github } from "lucide-react";
+import { ExternalLink, Github, Play } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 const projects = [
   {
-    title: "Portfolio",
-    description: "A personal portfolio website showcasing my work and skills.",
-    tags: ["React", "Tailwind"],
-    demoLink: "#",
-    githubLink: "#",
+    title: "Syber Chef(under development)",
+    description: "A web application provide syber security services like vuln scan , and container scanning, abd sandbox for url analysis.",
+    tags: ["Docker", "flask","Kubernetes","postgres","react","Colab","cuckoo sandbox","...."],
+    demoLink: "https://cyberbrief-latest.onrender.com/scalar/",
+    githubLink: "https://github.com/a7medsr/CyberBrief",
+    hasVideo: false,
+    showDemo: true,
+    showGithub: true,
   },
   {
     title: "AUTO GRAD",
     description: "An automated grading system for educational institutions.",
-    tags: ["TypeScript", "Node.js"],
+    tags: ["React", ".NET","Clean Architecture"],
     demoLink: "#",
-    githubLink: "#",
+    githubLink: "https://github.com/Kareem83/AutoGradProject",
+    hasVideo: true,
+    showDemo: false,
+    showGithub: true,
+    videoSrc: "/autograd.mp4",
+
+  },
+
+  {
+    title: "Foodes",
+    description: "A full-stack Fooding ordering platform",
+    tags: ["MVC", ".NET","Onion Architecture","EF Core","SQL Server","Azure"],
+    demoLink: "#",
+    githubLink: "https://github.com/aabdoo23/Foodies",
+    hasVideo: true,
+    showDemo: false,
+    showGithub: true,
+    videoSrc: "/foodes.mp4",
   },
   {
-    title: "UI/UX",
-    description: "A collection of UI/UX design projects and prototypes.",
-    tags: ["Figma", "Design"],
+    title: "Sochial App",
+    description: "Real-time Sochial Media platfortm allow you to follow chat and post and more.",
+    tags: ["Socket.io/signalR", ".NET","MySql"],
     demoLink: "#",
-    githubLink: "#",
-  },
-  {
-    title: "E-Commerce",
-    description: "A full-stack e-commerce platform with payment integration.",
-    tags: ["React", "Node.js"],
-    demoLink: "#",
-    githubLink: "#",
-  },
-  {
-    title: "Chat App",
-    description: "Real-time messaging application with modern features.",
-    tags: ["Socket.io", "React"],
-    demoLink: "#",
-    githubLink: "#",
+    githubLink: "https://github.com/NourTarek201/Social-Media-DotNet-API",
+    hasVideo: false,
+    showDemo: false,
+    showGithub: true,
   },
 ];
 
@@ -45,6 +60,8 @@ const duplicatedProjects = [...projects, ...projects];
 const Projects = () => {
   const [isPaused, setIsPaused] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
+  const [currentVideoSrc, setCurrentVideoSrc] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<number>();
   const scrollPositionRef = useRef(0);
@@ -136,20 +153,53 @@ const Projects = () => {
                 transition-opacity duration-300
                 ${hoveredIndex === index ? 'opacity-100' : 'opacity-0'}
               `}>
-                <a
-                  href={project.demoLink}
-                  className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-primary-foreground hover:scale-110 transition-transform duration-300"
-                  aria-label="View demo"
-                >
-                  <ExternalLink size={20} />
-                </a>
-                <a
-                  href={project.githubLink}
-                  className="w-12 h-12 rounded-full bg-secondary border border-border flex items-center justify-center text-foreground hover:scale-110 transition-transform duration-300"
-                  aria-label="View code"
-                >
-                  <Github size={20} />
-                </a>
+                {project.showDemo && (
+                  <a
+                    href={project.demoLink}
+                    className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-primary-foreground hover:scale-110 transition-transform duration-300"
+                    aria-label="View demo"
+                  >
+                    <ExternalLink size={20} />
+                  </a>
+                )}
+                {project.showGithub && (
+                  <a
+                    href={project.githubLink}
+                    className="w-12 h-12 rounded-full bg-secondary border border-border flex items-center justify-center text-foreground hover:scale-110 transition-transform duration-300"
+                    aria-label="View code"
+                  >
+                    <Github size={20} />
+                  </a>
+                )}
+                {project.hasVideo && (
+                  <Dialog open={isVideoOpen} onOpenChange={setIsVideoOpen}>
+                    <DialogTrigger asChild>
+                      <Button
+                        size="sm"
+                        className="w-12 h-12 rounded-full p-0 flex items-center justify-center hover:scale-110 transition-transform duration-300"
+                        aria-label="Play video"
+                        onClick={() => setCurrentVideoSrc(project.videoSrc)}
+                      >
+                        <Play size={20} />
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-8xl w-[90vw]">
+                      <div className="w-full">
+                        <div className="relative w-full overflow-hidden bg-black rounded-lg" style={{ paddingBottom: "56.25%" }}>
+                          <video
+                            className="absolute inset-0 w-full h-full"
+                            controls
+                            autoPlay
+                            key={currentVideoSrc}
+                          >
+                            <source src={currentVideoSrc} type="video/mp4" />
+                            Your browser does not support the video tag.
+                          </video>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                )}
               </div>
             </div>
 
